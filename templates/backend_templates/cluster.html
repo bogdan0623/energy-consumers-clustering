@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<html>
+<head>
+<style>
+  .hidden {
+    display: none;
+  }
+  .comparison-period {
+    display: none;
+  }
+  body, html {
+        height: 100%;
+        margin: 0;
+    }
+
+    .bg {
+        background-image: url("{% static 'back.png' %}");
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+</head>
+<body>
+<input type="hidden" name="assigned_pod" value="{{ assigned_pod }}">
+
+<br>
+<br>
+<section class="vh-100 bg">
+<div align="center">
+{% if request.user.is_superuser %}
+    <br>
+    <br>
+    <br>
+    <br>
+<form class="card" style="border: 1.2px solid #ccc; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff; width: 400px; height: 300px; align: center;" align="center">
+        <div class="card-header" align="center">
+            <b>Select the type of the experiment</b>
+        </div>
+        <div class="card-content" align="left" style="font-size: 16px; padding-left: 16px;">
+
+        </div>
+<br>
+<br>
+<br>
+<form method="POST" action="{% url 'clusteringApp' %}">
+    <div align="center">
+    <a class="btn btn-success rounded-pill" href="{% url 'all-pods' %}" id="allPodsBtn" style="width: 220px; height: 45px; font-size: 20.5px;">All Pods</a>
+        <br>
+        <br>
+        <a class="btn btn-success rounded-pill" href="{% url 'specific-pod' %}" id="specificPodBtn" style="width: 220px; height: 45px; font-size: 20.5px;">Specific Pod</a></div>
+    <br>
+    <br>
+{% endif %}
+{% if request.user.is_superuser is False %}
+        <br>
+    <br>
+    <br>
+    <br>
+<div class="card" style="border: 1.2px solid #ccc; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff; width: 400px; height: 300px; align: center;" align="center">
+        <div class="card-header" align="center">
+            <b>Select type of report</b>
+        </div>
+        <div class="card-content" align="left" style="font-size: 16px; padding-left: 16px;">
+    <div align="center">
+        <br>
+<br>
+<br>
+        <a class="btn btn-success rounded-pill" href="{% url 'daily_monthly_yearly' %}" id="d-m-y" style="width: 235px; height: 45px; font-size: 20.5px;">Hourly/Daily/Monthly Reports</a>
+        <br>
+        <br>
+        <a class="btn btn-success rounded-pill" href="{% url 'comparison-page' %}" id="comparison" style="width: 235px; height: 45px; font-size: 20.5px;">Comparison</a>
+
+<!--    <button class="btn btn-info rounded-pill" id="dailyBtn" style="width: 150px; height: 40px; font-size: 18.5px;">Daily</button>-->
+<!--        <button class="btn btn-info rounded-pill" id="monthlyBtn" style="width: 150px; height: 40px; font-size: 18.5px;">Monthly</button>-->
+<!--        <button class="btn btn-info rounded-pill" id="yearlyBtn" style="width: 150px; height: 40px; font-size: 18.5px;">Yearly</button>-->
+<!--        <button class="btn btn-info rounded-pill" id="comparisonBtn" style="width: 150px; height: 40px; font-size: 18.5px;">Comparison</button>-->
+    </div>
+            <br>
+            <br>
+<div class="dropdown" id="dropdownContainer" style="display: none;">
+  <div id="yearContainer">
+    <label for="yearDropdown">Select year:</label>
+    <select id="yearDropdown"></select>
+  </div><br>
+  <div id="monthContainer">
+    <label for="monthDropdown">Select month:</label>
+    <select id="monthDropdown"></select>
+  </div><br>
+  <div id="dayContainer">
+    <label for="dayDropdown">Select day:</label>
+    <select id="dayDropdown"></select>
+  </div><br>
+<div class="comparison-container">
+      <div class="comparison-period" id="comparisonDropdowns">
+        <div class="dropdown">
+          <div>
+            <label for="firstPeriodMonthDropdown">Select month:</label>
+            <select id="firstPeriodMonthDropdown"></select>
+          </div>
+          <div>
+            <label for="firstPeriodYearDropdown">Select year:</label>
+            <select id="firstPeriodYearDropdown"></select>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <div>
+            <label for="secondPeriodMonthDropdown">Select month:</label>
+            <select id="secondPeriodMonthDropdown"></select>
+          </div>
+          <div>
+            <label for="secondPeriodYearDropdown">Select year:</label>
+            <select id="secondPeriodYearDropdown"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div style="text-align: center;">
+  <button class="btn btn-success rounded-pill" id="submitBtn">Show report</button>
+        <br>
+        <br>
+        <div id="loadingMessage" style="display:none; font-size: 18px;">Loading...</div>
+        </div>
+</div>
+            <br>
+
+<div style="padding-left: 100px; padding-right: 150px;">
+    <img id="imageContainer" alt="Image from path" style="display: none; width: 500px; height: 350px; margin: 0 auto;">
+</div>
+
+
+            </div>
+            </div>
+    </form></form>
+    {% endif %}
+            </div>
+
+<script>
+
+document.getElementById("submitBtn").addEventListener("click", function() {
+    document.getElementById("loadingMessage").style.display = "block";
+});
+
+  const comparisonBtn = document.getElementById("comparisonBtn");
+  const comparisonDropdowns = document.getElementById("comparisonDropdowns");
+  const dailyBtn = document.getElementById("dailyBtn");
+  const monthlyBtn = document.getElementById("monthlyBtn");
+  const yearlyBtn = document.getElementById("yearlyBtn");
+
+  function deactivateAllButtons() {
+    comparisonBtn.classList.remove("active");
+    dailyBtn.classList.remove("active");
+    monthlyBtn.classList.remove("active");
+    yearlyBtn.classList.remove("active");
+  }
+
+  comparisonBtn.addEventListener("click", () => {
+    deactivateAllButtons();
+    comparisonBtn.classList.add("active");
+    comparisonDropdowns.style.display = comparisonBtn.classList.contains("active") ? "block" : "none";
+  });
+
+  dailyBtn.addEventListener("click", () => {
+    deactivateAllButtons();
+    dailyBtn.classList.add("active");
+    comparisonDropdowns.style.display = "none";
+  });
+
+  monthlyBtn.addEventListener("click", () => {
+    deactivateAllButtons();
+    monthlyBtn.classList.add("active");
+    comparisonDropdowns.style.display = "none";
+  });
+
+  yearlyBtn.addEventListener("click", () => {
+    deactivateAllButtons();
+    yearlyBtn.classList.add("active");
+    comparisonDropdowns.style.display = "none";
+  });
+</script>
+
+
+<script>
+
+
+
+  const yearDropdown = document.getElementById("yearDropdown");
+  const monthDropdown = document.getElementById("monthDropdown");
+  const dayDropdown = document.getElementById("dayDropdown");
+  const yearContainer = document.getElementById("yearContainer");
+  const monthContainer = document.getElementById("monthContainer");
+  const dayContainer = document.getElementById("dayContainer");
+  const dropdownContainer = document.getElementById("dropdownContainer");
+  const submitBtn = document.getElementById("submitBtn");
+  const selectedImage = document.getElementById("selectedImage");
+
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  function populateDropdown(select, options) {
+    select.innerHTML = "";
+    for (let option of options) {
+      const opt = document.createElement("option");
+      opt.value = option;
+      opt.innerHTML = option;
+      select.appendChild(opt);
+    }
+  }
+
+  function showDailyDropdowns() {
+    populateDropdown(yearDropdown, Array.from({ length: 5 }, (_, i) => 2015 + i));
+    populateDropdown(monthDropdown, months);
+    populateDropdown(dayDropdown, Array.from({ length: 31 }, (_, i) => i + 1));
+    dayContainer.style.display = "block";
+    monthContainer.style.display = "block";
+    yearContainer.style.display = "block";
+    dropdownContainer.style.display = "block";
+  }
+
+  function showMonthlyDropdowns() {
+    populateDropdown(yearDropdown, Array.from({ length: 5 }, (_, i) => 2015 + i));
+    populateDropdown(monthDropdown, months);
+    dayContainer.style.display = "none";
+    monthContainer.style.display = "block";
+    yearContainer.style.display = "block";
+    dropdownContainer.style.display = "block";
+    hideImage();
+  }
+
+  function showYearlyDropdown() {
+    populateDropdown(yearDropdown, Array.from({ length: 5 }, (_, i) => 2015 + i));
+    monthContainer.style.display = "none";
+    dayContainer.style.display = "none";
+    yearContainer.style.display = "block";
+    dropdownContainer.style.display = "block";
+    hideImage();
+  }
+
+  function handleSubmission() {
+    const selectedYear = parseInt(yearDropdown.value);
+    const selectedMonth = months.indexOf(monthDropdown.value) + 1;
+    const selectedDay = parseInt(dayDropdown.value);
+
+    // Display your image based on the selected date
+    selectedImage.src = "../media/simple_full.png";
+    selectedImage.style.display = "block";
+  }
+
+<!--  function hideImage() {-->
+<!--    selectedImage.style.display = "none";-->
+<!--  }-->
+
+  document.getElementById("dailyBtn").addEventListener("click", function() {
+<!--    hideImage();-->
+    showDailyDropdowns();
+    submitBtn.addEventListener("click", handleSubmission);
+  });
+
+  document.getElementById("monthlyBtn").addEventListener("click", function() {
+<!--    hideImage();-->
+    showMonthlyDropdowns();
+    submitBtn.removeEventListener("click", handleSubmission);
+  });
+
+  document.getElementById("yearlyBtn").addEventListener("click", function() {
+<!--    hideImage();-->
+    showYearlyDropdown();
+    submitBtn.removeEventListener("click", handleSubmission);
+  });
+
+  monthDropdown.addEventListener("change", updateDayDropdown);
+
+  function updateDayDropdown() {
+    const selectedMonth = months.indexOf(monthDropdown.value) + 1;
+    const selectedYear = parseInt(yearDropdown.value);
+    const days = selectedMonth === 2 && isLeapYear(selectedYear) ? 29 : daysInMonth[selectedMonth - 1];
+
+    populateDropdown(dayDropdown, Array.from({ length: days }, (_, i) => i + 1));
+  }
+
+  function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+  }
+
+let currentMode = "Daily";
+
+document.getElementById("dailyBtn").addEventListener("click", () => currentMode = "Daily");
+document.getElementById("monthlyBtn").addEventListener("click", () => currentMode = "Monthly");
+document.getElementById("yearlyBtn").addEventListener("click", () => currentMode = "Yearly");
+document.getElementById("submitBtn").addEventListener("click", handleSubmission);
+
+function handleSubmission() {
+    const selectedYear = parseInt(yearDropdown.value);
+    const selectedMonth = months.indexOf(monthDropdown.value) + 1;
+    const selectedDay = parseInt(dayDropdown.value);
+    const assignedPod = document.getElementsByName('assigned_pod')[0].value;
+
+    let body = {
+        pod: assignedPod,
+        display_type: currentMode,
+        year: selectedYear,
+    };
+
+    if (currentMode === "Daily") {
+        body.day = selectedDay;
+        body.month = selectedMonth;
+    } else if (currentMode === "Monthly") {
+        body.month = selectedMonth;
+    }
+
+    sendRequest(body);
+}
+
+function sendRequest(body) {
+    fetch('http://localhost:8000/consume/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(body)
+    })
+    .then(response => response.blob())
+    .then(data => {
+        window.location.href = 'http://localhost:8000/reports/';
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+
+</script>
+
+
+
+
+</section>
+</body>
+</html>
+{% endblock %}

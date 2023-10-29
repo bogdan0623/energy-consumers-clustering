@@ -1,0 +1,251 @@
+{% extends 'base1.html' %}
+{% block content %}
+<html>
+<head>
+</head>
+<body>
+<br>
+<br>
+<br>
+<div align="center">
+    <div class="card" style="border: 1.2px solid #ccc; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff; width: 1300px; height: 1750px; align: center;" align="center" id="my-card">
+        <div class="card-header" align="center">
+            <b>Plot view</b>
+        </div>
+        <div class="card-content" style="font-size: 16px; padding-left: 26px; padding-right: 26px;">
+            <br>
+            <div style="display: flex; align-items: center; padding: 20px;">
+                <div style="flex: 1; margin-right: 20px;">
+    {% if euclidean_plot_url %}
+        <img src="{{ euclidean_plot_url }}" alt="Euclidean Plot" style="align: left;">
+    {% endif %}
+                    <br>
+                    <br>
+
+    {% if manhattan_plot_url %}
+        <img src="{{ manhattan_plot_url }}" alt="Manhattan Plot" style="align: left;">
+    {% endif %}
+                     <br>
+    {% if cosine_plot_url %}
+        <img src="{{ cosine_plot_url }}" alt="Cosine Plot" style="align: left;">
+    {% endif %}
+                </div>
+                {% if data.Euclidean.table %}
+                <div style="flex: 1; text-align: right;">
+                    <div style="margin-bottom: 20px;">
+                        <select id="clusterDropdown_1">
+                            {% for cluster in data.cluster_list %}
+                                <option value="{{ cluster }}">Cluster {{ cluster }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% csrf_token %}
+                    <a class="btn btn-success rounded-pill" style="width: 150px; height: 40px; font-size: 16px; color: white;" id="line-euclidean">Show line-chart</a>
+                    <br>
+                    <br>
+                    <br>
+
+                    <table border="1" cellpadding="16" align="right" style="margin-bottom: 90px;">
+                        <tr>
+                            <th>Evaluation metric</th>
+                            <th>Value obtained</th>
+                            <th>Range</th>
+                            <th>Best values</th>
+                        </tr>
+                        {% for row in data.Euclidean.table %}
+                        <tr>
+                            <td>{{ row.0 }}</td>
+                            <td>{{ row.1 }}</td>
+                            <td>{{ row.2 }}</td>
+                            <td>{{ row.3 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+                    {% if data.Manhattan.table %}
+                    <div style="flex: 1; text-align: right;">
+                    <div style="margin-bottom: 20px;">
+                        <select id="clusterDropdown_2">
+                           {% for cluster in data.cluster_list %}
+                              <option value="{{ cluster }}">Cluster {{ cluster }}</option>
+                           {% endfor %}
+                        </select>
+                    </div>
+                    {% csrf_token %}
+                    <a class="btn btn-success rounded-pill" style="width: 150px; height: 40px; font-size: 16px; color: white;" id="line-manhattan">Show line-chart</a>
+                    <br>
+                    <br>
+                    <br>
+
+                    <table border="1" cellpadding="16" align="right" style="margin-bottom: 70px;">
+                        <tr>
+                            <th>Evaluation metric</th>
+                            <th>Value obtained</th>
+                            <th>Range</th>
+                            <th>Best values</th>
+                        </tr>
+                        {% for row in data.Manhattan.table %}
+                        <tr>
+                            <td>{{ row.0 }}</td>
+                            <td>{{ row.1 }}</td>
+                            <td>{{ row.2 }}</td>
+                            <td>{{ row.3 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+
+                    {% if data.Cosine.table %}
+                        <div style="flex: 1; text-align: right;">
+                    <div style="margin-bottom: 20px;">
+                        <select id="clusterDropdown_3">
+                            {% for cluster in data.cluster_list %}
+                                <option value="{{ cluster }}">Cluster {{ cluster }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% csrf_token %}
+                    <a class="btn btn-success rounded-pill" style="width: 150px; height: 40px; font-size: 16px; color: white;" id="line-cosine">Show line-chart</a>
+                    <br>
+                    <br>
+                    <br>
+
+                    <table border="1" cellpadding="16" align="right" style="margin-bottom: 70px;">
+                        <tr>
+                            <th>Evaluation metric</th>
+                            <th>Value obtained</th>
+                            <th>Range</th>
+                            <th>Best values</th>
+                        </tr>
+                        {% for row in data.Cosine.table %}
+                        <tr>
+                            <td>{{ row.0 }}</td>
+                            <td>{{ row.1 }}</td>
+                            <td>{{ row.2 }}</td>
+                            <td>{{ row.3 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% endif %}
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    var euclideanDataUrl = '{{ euclidean_data_url }}';
+</script>
+
+<script>
+
+var element = document.getElementById("line-euclidean");
+
+if(element){
+    element.addEventListener("click", function() {
+        var euclideanDataUrl = '{{ euclidean_data_url }}';
+        console.log(euclideanDataUrl);
+        var clusterValue = parseInt(document.getElementById("clusterDropdown_1").value);
+        console.log(clusterValue)
+
+        fetch('http://localhost:8000/cluster/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                "data": euclideanDataUrl,
+                "cluster": clusterValue
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            window.location.href = 'http://localhost:8000/show_line_chart/';
+        })
+        .catch(error => console.error('Error:', error));
+    });
+}
+else {
+    console.warn("Element with id 'line-euclidean' was not found.");
+}
+
+var element2 = document.getElementById("line-manhattan")
+
+
+if(element2){
+     element2.addEventListener("click", function() {
+        var manhattanDataUrl = '{{ manhattan_data_url }}';
+        console.log(manhattanDataUrl);
+        var clusterValue = parseInt(document.getElementById("clusterDropdown_2").value);
+        console.log(clusterValue)
+
+        fetch('http://localhost:8000/cluster/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                "data": manhattanDataUrl,
+                "cluster": clusterValue
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            window.location.href = 'http://localhost:8000/show_line_chart/';
+        })
+        .catch(error => console.error('Error:', error));
+    });
+}
+else {
+    console.warn("Element with id 'line-manhattan' was not found.");
+}
+
+var element3 = document.getElementById("line-cosine")
+
+if(element3){
+    element3.addEventListener("click", function() {
+        var cosineDataUrl = '{{ cosine_data_url }}';
+        console.log(cosineDataUrl);
+        var clusterValue = parseInt(document.getElementById("clusterDropdown_3").value);
+        console.log(clusterValue)
+
+        fetch('http://localhost:8000/cluster/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                "data": cosineDataUrl,
+                "cluster": clusterValue
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            window.location.href = 'http://localhost:8000/show_line_chart/';
+        })
+        .catch(error => console.error('Error:', error));
+    });
+}
+else {
+    console.warn("Element with id 'line-cosine' was not found.");
+}
+
+
+</script>
+</body>
+</html>
+
+<!--{% endblock %}-->

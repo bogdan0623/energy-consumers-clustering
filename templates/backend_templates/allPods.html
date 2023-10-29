@@ -1,0 +1,446 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<br>
+
+<div align="center">
+    <div class="card"
+         style="border: 1.2px solid #ccc; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff; width: 800px; height: 550px; align: center;"
+         align="center">
+        <div class="card-header" align="center">
+            <b>All pods experiment</b>
+        </div>
+        <div class="card-content" align="left" style="font-size: 16px; padding-left: 16px;">
+            <br>
+            <br>
+<!--            <form action="{% url 'case1' %}" method="POST" id="form">-->
+                <label for="algorithm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                    </svg>
+                    Select algorithm:
+                    <select name="algorithm" id="algorithm" required>
+                        <option value="KMeans">KMeans</option>
+                        <option value="AHC">AHC</option>
+                        <option value="DBSCAN">DBSCAN</option>
+                        <option value="OPTICS">OPTICS</option>
+                    </select>
+                </label>
+                <div id="kmeans-options">
+
+                    <div id="num-clusters">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Number of clusters:</label>
+                        <input type="number" name="n_clusters" id="km-num-cluster" min="0" required>
+
+                    </div>
+
+                    <div id="select-metrics">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Select similarity metrics:</label>
+                        <input type="checkbox" name="metrics" value="Euclidean" id="km-euclidean"> Euclidean
+                        <input type="checkbox" name="metrics" value="Manhattan" id="km-manhattan"> Manhattan
+                        <input type="checkbox" name="metrics" value="Cosine" id="km-cosine"> Cosine
+                    </div>
+                </div>
+                <div id="ahc-options" style="display: none;">
+                    <div id="num-clusters-ahc">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Number of clusters:</label>
+                        <input type="number" name="n_clusters" min="0" id="ahc-num-cluster" disabled>
+                    </div>
+
+                    <div id="select-metrics-ahc">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Select similarity metrics:</label>
+                        <input type="checkbox" name="metrics" value="Euclidean" id="ahc-euclidean" disabled> Euclidean
+                        <input type="checkbox" name="metrics" value="Manhattan" id="ahc-manhattan" disabled> Manhattan
+                        <input type="checkbox" name="metrics" value="Cosine" id="ahc-cosine" disabled> Cosine
+                    </div>
+                </div>
+
+                <div id="dbscan-options" style="display: none;">
+                    <div id="eps">
+                        <br>
+                        <label for="eps">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Eps:</label>
+                        <input type="number" name="eps" step="any" id="dbscan-eps" disabled>
+                    </div>
+
+                    <div id="min-samples">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Min Samples:</label>
+                        <input type="number" name="min_samples" id="dbscan-min-samples" disabled>
+                    </div>
+
+                    <div id="dbscan-metrics">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Select similarity metrics:</label>
+                        <input type="checkbox" name="metrics" value="Euclidean" id="dbscan-euclidean" disabled>
+                        Euclidean
+                        <input type="checkbox" name="metrics" value="Manhattan" id="dbscan-manhattan" disabled>
+                        Manhattan
+                        <input type="checkbox" name="metrics" value="Cosine" id="dbscan-cosine" disabled> Cosine
+                    </div>
+                </div>
+
+                <div id="optics-options" style="display: none;">
+                    <div id="eps-optics">
+                        <br>
+                        <label for="eps-optics">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Eps:</label>
+                        <input type="number" name="eps" step="any" id="optics-eps" disabled>
+                    </div>
+
+
+                    <div id="min-samples-optics">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Min Samples:</label>
+                        <input type="number" name="min_samples" id="optics-min-samples" disabled>
+                    </div>
+
+                    <div id="optics-metrics">
+                        <br>
+                        <label>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                            Select similarity metrics:</label>
+                        <input type="checkbox" name="metrics" value="Euclidean" id="optics-euclidean" disabled>
+                        Euclidean
+                        <input type="checkbox" name="metrics" value="Manhattan" id="optics-manhattan" disabled>
+                        Manhattan
+                        <input type="checkbox" name="metrics" value="Cosine" id="optics-cosine" disabled> Cosine
+                    </div>
+                </div>
+<!--                <br>-->
+                <br>
+                <label for="select_year">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                    </svg>
+                    Select year:
+                    <select name="select_year" id="select_year">
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                    </select></label>
+                <br>
+                <br>
+                <label for="select_month">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                    </svg>
+                    Select month:
+                    <select name="select_month" id="select_month">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select></label>
+
+                {% csrf_token %}
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-success rounded-pill"
+                            style="width: 160px; height: 42px; font-size: 18px;" value="Run clustering" id="run_clustering">Run clustering
+                    </button>
+                    <br>
+                    <br>
+                <div id="loadingMessage" style="display:none; font-size: 18px;">Loading...</div>
+                </div>
+
+<!--            </form>-->
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<script>
+    const algorithmSelect = document.getElementById('algorithm');
+    const numClustersDiv = document.getElementById('num-clusters');
+    const selectMetricsDiv = document.getElementById('select-metrics');
+    const dbscanOptionsDiv = document.getElementById('dbscan-options');
+    const epsDiv = document.getElementById('eps');
+    const minSamplesDiv = document.getElementById('min-samples');
+    const dbscanMetricsDiv = document.getElementById('dbscan-metrics');
+    const opticsOptionsDiv = document.getElementById('optics-options');
+    const epsOpticsDiv = document.getElementById('eps-optics');
+    const minSamplesOpticsDiv = document.getElementById('min-samples-optics');
+    const opticsMetricsDiv = document.getElementById('optics-metrics');
+    const ahcOptionsDiv = document.getElementById('ahc-options');
+    const kmeansOptionsDiv = document.getElementById('kmeans-options');
+
+    const opticsEuclidean = document.getElementById('optics-euclidean');
+    const opticsManhattan = document.getElementById('optics-manhattan');
+    const opticsCosine = document.getElementById('optics-cosine');
+    const opticsEps = document.getElementById('optics-eps');
+    const opticsMinSamples = document.getElementById('optics-min-samples');
+
+    const dbscanEuclidean = document.getElementById('dbscan-euclidean');
+    const dbscanManhattan = document.getElementById('dbscan-manhattan');
+    const dbscanCosine = document.getElementById('dbscan-cosine');
+    const dbscanEps = document.getElementById('dbscan-eps');
+    const dbscanMinSamples = document.getElementById('dbscan-min-samples');
+
+    const kmEuclidean = document.getElementById('km-euclidean');
+    const kmManhattan = document.getElementById('km-manhattan');
+    const kmCosine = document.getElementById('km-cosine');
+    const kmCluster = document.getElementById('km-num-cluster');
+
+    const ahcEuclidean = document.getElementById('ahc-euclidean');
+    const ahcManhattan = document.getElementById('ahc-manhattan');
+    const ahcCosine = document.getElementById('ahc-cosine');
+    const ahcCluster = document.getElementById('ahc-num-cluster');
+
+    const formElement = document.getElementById('form');
+
+
+    algorithmSelect.addEventListener('change', function () {
+        dbscanOptionsDiv.style.display = 'none';
+        opticsOptionsDiv.style.display = 'none';
+        ahcOptionsDiv.style.display = 'none';
+        kmeansOptionsDiv.style.display = 'none';
+
+
+        opticsEuclidean.setAttribute("disabled", "");
+        opticsManhattan.setAttribute("disabled", "");
+        opticsCosine.setAttribute("disabled", "");
+        opticsEps.setAttribute("disabled", "");
+        opticsMinSamples.setAttribute("disabled", "");
+
+        dbscanEuclidean.setAttribute("disabled", "");
+        dbscanManhattan.setAttribute("disabled", "");
+        dbscanCosine.setAttribute("disabled", "");
+        dbscanEps.setAttribute("disabled", "");
+        dbscanMinSamples.setAttribute("disabled", "");
+
+        kmEuclidean.setAttribute("disabled", "");
+        kmManhattan.setAttribute("disabled", "");
+        kmCosine.setAttribute("disabled", "");
+        kmCluster.setAttribute("disabled", "");
+
+        ahcEuclidean.setAttribute("disabled", "");
+        ahcManhattan.setAttribute("disabled", "");
+        ahcCosine.setAttribute("disabled", "");
+        ahcCluster.setAttribute("disabled", "");
+
+
+
+        if (algorithmSelect.value === 'KMeans') {
+            kmeansOptionsDiv.style.display = 'block';
+            kmEuclidean.removeAttribute("disabled");
+            kmManhattan.removeAttribute("disabled");
+            kmCosine.removeAttribute("disabled");
+            kmCluster.removeAttribute("disabled");
+        } else if (algorithmSelect.value === 'DBSCAN') {
+            dbscanOptionsDiv.style.display = 'block';
+            dbscanEuclidean.removeAttribute("disabled");
+            dbscanManhattan.removeAttribute("disabled");
+            dbscanCosine.removeAttribute("disabled");
+            dbscanEps.removeAttribute("disabled");
+            dbscanMinSamples.removeAttribute("disabled");
+        } else if (algorithmSelect.value === 'OPTICS') {
+            opticsOptionsDiv.style.display = 'block';
+            opticsEuclidean.removeAttribute("disabled");
+            opticsManhattan.removeAttribute("disabled");
+            opticsCosine.removeAttribute("disabled");
+            opticsEps.removeAttribute("disabled");
+            opticsMinSamples.removeAttribute("disabled");
+
+        } else if (algorithmSelect.value === 'AHC') {
+            ahcOptionsDiv.style.display = 'block';
+            ahcEuclidean.removeAttribute("disabled");
+            ahcManhattan.removeAttribute("disabled");
+            ahcCosine.removeAttribute("disabled");
+            ahcCluster.removeAttribute("disabled");
+        }
+    });
+
+
+    const runButton = document.getElementById('run_clustering');
+
+    function getAlgorithmParams(algorithm) {
+        var params = {};
+        var distances = [];
+        var ok = 1;
+
+        if (algorithm === 'KMeans') {
+            params['n_clusters'] = parseInt(document.getElementById('km-num-cluster').value);
+            if (isNaN(params['n_clusters'])) {
+                ok = 0;
+            }
+            var kmMetrics = document.querySelectorAll('input[name="metrics"]:checked');
+            distances.push(...Array.from(kmMetrics).map(cb => cb.value));
+        } else if (algorithm === 'AHC') {
+            params['n_clusters'] = parseInt(document.getElementById('ahc-num-cluster').value);
+            if (isNaN(params['n_clusters'])) {
+                ok = 0;
+            }
+            var ahcMetrics = document.querySelectorAll('input[name="metrics"]:checked');
+            distances.push(...Array.from(ahcMetrics).map(cb => cb.value));
+        } else if (algorithm === 'DBSCAN') {
+            params['eps'] = parseFloat(document.getElementById('dbscan-eps').value);
+            if (isNaN(params['eps'])) {
+                ok = 0;
+            }
+            params['min_samples'] = parseInt(document.getElementById('dbscan-min-samples').value);
+            if (isNaN(params['min_samples'])) {
+                ok = 0;
+            }
+            var dbscanMetrics = document.querySelectorAll('input[name="metrics"]:checked');
+            distances.push(...Array.from(dbscanMetrics).map(cb => cb.value));
+        } else if (algorithm === 'OPTICS') {
+            params['eps'] = parseFloat(document.getElementById('optics-eps').value);
+            if (isNaN(params['eps'])) {
+                ok = 0;
+            }
+            params['min_samples'] = parseInt(document.getElementById('optics-min-samples').value);
+            if (isNaN(params['min_samples'])) {
+                ok = 0;
+            }
+            var opticsMetrics = document.querySelectorAll('input[name="metrics"]:checked');
+            distances.push(...Array.from(opticsMetrics).map(cb => cb.value));
+        }
+        var rez = [params, distances, ok]
+        return rez;
+    }
+
+    runButton.addEventListener('click', function() {
+        const algorithm = document.getElementById('algorithm').value;
+        const month = parseInt(document.getElementById('select_month').value);
+        const year = parseInt(document.getElementById('select_year').value);
+        const distances = getAlgorithmParams(algorithm)[1];
+        const params = getAlgorithmParams(algorithm)[0];
+        const ok = getAlgorithmParams(algorithm)[2];
+        if (algorithm === "" || year === "" || month === "" || distances.length === 0 || ok === 0) {
+                alert("You must select or introduce values for all fields!");
+        }
+        else{
+            document.getElementById("loadingMessage").style.display = "block";
+            fetch('http://localhost:8000/case1/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    "algorithm": algorithm,
+                    "params": params,
+                    "distances": distances,
+                    "month": month,
+                    "year": year
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                // Redirect and pass the response to another page
+                window.location.href = 'http://localhost:8000/show_plot/';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+
+window.onload = function() {
+    window.addEventListener("beforeunload", function() {
+            document.getElementById("loadingMessage").style.display = "none";
+        });
+    };
+
+function validateAndSubmit() {
+    var minSamples = document.getElementById("optics-min-samples").value;
+    var year = document.getElementById("select_year").value;
+    var month = document.getElementById("select_month").value;
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked').length;
+
+    if (minSamples == "" || year == "" || month == "" || checkboxes == 0) {
+      alert("You must select or introduce values for all fields!");
+      document.getElementById('loadingMessage').style.display = 'none';
+    }
+  }
+
+</script>
+{% endblock %}

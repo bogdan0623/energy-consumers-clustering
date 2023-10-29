@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+    }
+
+    .bg {
+        background-image: url("{% static 'back.png' %}");
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+</style>
+<section class="vh-100 bg">
+    <div align="center">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="card"
+             style="border: 5.8px solid #e3f2fd;; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff; width: 635px;  align: center;"
+             align="center">
+
+            <div class="card-body p-0 text-center" align="center" style=" padding-left: 16px;">
+                <div class=" h-custom">
+                    <div class="d-flex justify-content-center align-items-center h-100">
+                        <div align="center" class="col-lg-6 col-xl-7">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="divider d-flex align-items-center my-2" align="center">
+                                    <h1 align="center" class="fw-bold mb-2 text-uppercase"
+                                        style="font-size: 1.6em; text-align: center;"><b>Sign in here!</b></h1>
+                                </div>
+                                <br>
+                                <!-- Username input -->
+                                <div class="form-outline mb-2">
+                                    <input type="text" id="form3Example3" class="form-control form-control-lg"
+                                           name="username"
+                                           placeholder="Enter username"/>
+                                    <label class="form-label" for="form3Example3"></label>
+                                    {{ form.username.errors }}
+                                </div>
+
+                                <!-- Password input -->
+                                <div class="form-outline mb-2">
+                                    <input type="password" id="form3Example4" class="form-control form-control-lg"
+                                           name="password"
+                                           placeholder="Enter password"/>
+                                    <label class="form-label" for="form3Example4"></label>
+                                    {{ form.password.errors }}
+                                </div>
+
+                                <div class="text-center text-lg-start mt-4 pt-2">
+                                    <button type="submit" class="btn btn-primary btn-lg"
+                                            style="padding-left: 2.5rem; padding-right: 2.5rem;">Login
+                                    </button>
+                                    <br>
+                                    <br>
+                                    <span style="color: red;">{{ form.non_field_errors }}</span>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

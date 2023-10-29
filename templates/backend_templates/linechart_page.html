@@ -1,0 +1,35 @@
+{% extends 'base1.html' %}
+{% block content %}
+<head>
+    <style>
+        .card1 {
+  overflow-y: auto;
+  max-height: 500px;
+}
+    </style>
+</head>
+<body>
+<br>
+<br>
+<br>
+<div align="center">
+    <div class="card" style="border: 1.2px solid #ccc; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff; width: 1170px; height: 1000px; align: center;" align="center">
+        <div class="card-header" align="center">
+            <b>Line chart</b>
+        </div>
+        <div class="card-content" style="font-size: 16px; padding-left: 26px; padding-right: 26px;">
+            <div style="display: flex; align-items: center; padding: 20px;">
+                <div style="flex: 1; margin-right: 20px;">
+                    <img src="{{ image_url }}" alt="chart" style="align: left;"  width="700" height="500">
+                </div>
+        </div>
+            <div class="card1" style="overflow-y:auto; max-height:500px;border: 3.9px solid #ccc; width: 1000px; height: 300px;">
+                    <div class="card-header"><b>PODs</b></div>
+                    {{ data.pod_list }}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
